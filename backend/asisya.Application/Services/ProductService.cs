@@ -50,7 +50,7 @@ public class ProductService : IProductService
             UnitsInStock = (short)random.Next(0, 500),
             UnitsOnOrder = (short)random.Next(0, 100),
             ReorderLevel = (short)random.Next(0, 50),
-            QuantityPerUnit = $"{random.Next(1, 100)} units",
+            QuantityPerUnit = (short)random.Next(1, 100),
             Discontinued = false
         });
 

@@ -32,7 +32,7 @@ public class ProductRepository : IProductRepository
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
-            query = query.Where(p => p.ProductName.Contains(search));
+            query = query.Where(p => EF.Functions.ILike(p.ProductName, $"%{search}%"));
 
         if (categoryId.HasValue)
             query = query.Where(p => p.CategoryID == categoryId);

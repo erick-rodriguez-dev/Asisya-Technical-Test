@@ -4,7 +4,7 @@ public class ProductDto
 {
     public int ProductID { get; set; }
     public string ProductName { get; set; } = string.Empty;
-    public string? QuantityPerUnit { get; set; }
+    public short? QuantityPerUnit { get; set; }
     public decimal? UnitPrice { get; set; }
     public short? UnitsInStock { get; set; }
     public short? UnitsOnOrder { get; set; }
