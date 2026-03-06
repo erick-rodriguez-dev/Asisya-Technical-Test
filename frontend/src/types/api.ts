@@ -69,3 +69,15 @@ export interface UpdateProductForm {
   categoryID?: number;
   supplierID?: number;
 }
+
+export interface CreateProductForm {
+  productName: string;
+  quantityPerUnit?: number;
+  unitPrice?: number;
+  unitsInStock?: number;
+  unitsOnOrder?: number;
+  reorderLevel?: number;
+  discontinued: boolean;
+  categoryID?: number;
+  supplierID?: number;
+}

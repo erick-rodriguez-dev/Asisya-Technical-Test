@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getProductById, updateProduct } from '../api/products';
+import { createProduct, getProductById, updateProduct } from '../api/products';
 import { getCategories } from '../api/categories';
 import { getSuppliers } from '../api/suppliers';
 import { SearchableSelect } from '../components/SearchableSelect';
-import type { UpdateProductForm, CategoryDto, SupplierDto } from '../types/api';
+import type { UpdateProductForm, CreateProductForm, CategoryDto, SupplierDto } from '../types/api';
 
 interface ProductFormValues {
   productName: string;
@@ -70,19 +70,42 @@ export function ProductFormPage() {
   }, [id, isEdit, reset]);
 
   async function onSubmit(values: ProductFormValues) {
-    const dto: UpdateProductForm = {
-      productName: values.productName || undefined,
-      quantityPerUnit: values.quantityPerUnit !== '' ? Number(values.quantityPerUnit) : undefined,
-      unitPrice: values.unitPrice !== '' ? Number(values.unitPrice) : undefined,
-      unitsInStock: values.unitsInStock !== '' ? Number(values.unitsInStock) : undefined,
-      unitsOnOrder: values.unitsOnOrder !== '' ? Number(values.unitsOnOrder) : undefined,
-      reorderLevel: values.reorderLevel !== '' ? Number(values.reorderLevel) : undefined,
-      discontinued: values.discontinued,
-      categoryID: values.categoryID !== '' ? Number(values.categoryID) : undefined,
-      supplierID: values.supplierID !== '' ? Number(values.supplierID) : undefined,
-    };
+    const quantityPerUnit = values.quantityPerUnit !== '' ? Number(values.quantityPerUnit) : undefined;
+    const unitPrice = values.unitPrice !== '' ? Number(values.unitPrice) : undefined;
+    const unitsInStock = values.unitsInStock !== '' ? Number(values.unitsInStock) : undefined;
+    const unitsOnOrder = values.unitsOnOrder !== '' ? Number(values.unitsOnOrder) : undefined;
+    const reorderLevel = values.reorderLevel !== '' ? Number(values.reorderLevel) : undefined;
+    const categoryID = values.categoryID !== '' ? Number(values.categoryID) : undefined;
+    const supplierID = values.supplierID !== '' ? Number(values.supplierID) : undefined;
 
-    await updateProduct(Number(id), dto);
+    if (isEdit) {
+      const dto: UpdateProductForm = {
+        productName: values.productName || undefined,
+        quantityPerUnit,
+        unitPrice,
+        unitsInStock,
+        unitsOnOrder,
+        reorderLevel,
+        discontinued: values.discontinued,
+        categoryID,
+        supplierID,
+      };
+      await updateProduct(Number(id), dto);
+    } else {
+      const dto: CreateProductForm = {
+        productName: values.productName,
+        quantityPerUnit,
+        unitPrice,
+        unitsInStock,
+        unitsOnOrder,
+        reorderLevel,
+        discontinued: values.discontinued,
+        categoryID,
+        supplierID,
+      };
+      await createProduct(dto);
+    }
+
     navigate('/products');
   }
 

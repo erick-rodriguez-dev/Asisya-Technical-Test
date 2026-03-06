@@ -50,6 +50,13 @@ public class ProductRepository : IProductRepository
         return (items, total);
     }
 
+    public async Task<Product> AddAsync(Product product)
+    {
+        await _context.Products.AddAsync(product);
+        await _context.SaveChangesAsync();
+        return product;
+    }
+
     public async Task AddRangeAsync(IEnumerable<Product> products)
     {
         var batches = products

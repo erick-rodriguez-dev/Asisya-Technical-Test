@@ -31,6 +31,16 @@ public class ProductsController : ControllerBase
         return product is null ? NotFound() : Ok(product);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.ProductName))
+            return BadRequest("ProductName es requerido.");
+
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = created.ProductID }, created);
+    }
+
     [HttpPost("/Product")]
     public async Task<IActionResult> Generate([FromBody] CreateProductsDto dto)
     {

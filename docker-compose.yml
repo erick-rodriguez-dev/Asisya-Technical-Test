@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: asisya
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - asisya-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=asisya;Username=postgres;Password=postgres"
+      Jwt__Secret: "CHANGE_THIS_SECRET_KEY_IN_PRODUCTION_MIN_32_CHARS!!"
+      Jwt__Issuer: asisya
+      Jwt__Audience: asisya
+      Jwt__ExpiresHours: "8"
+    networks:
+      - asisya-net
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - asisya-net
+    depends_on:
+      - api
+
+networks:
+  asisya-net:
+    driver: bridge
+
+volumes:
+  pgdata:

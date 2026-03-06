@@ -83,10 +83,24 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
+    for (var attempt = 1; attempt <= 10; attempt++)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break;
+        }
+        catch (Exception ex) when (attempt < 10)
+        {
+            logger.LogWarning("DB migration attempt {Attempt}/10 failed: {Message}. Retrying in 3s…", attempt, ex.Message);
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+        }
+    }
 }
 
 if (app.Environment.IsDevelopment())

@@ -1,5 +1,5 @@
 import client from './client';
-import type { Product, ProductFilter, ProductSummary, PagedResult, UpdateProductForm } from '../types/api';
+import type { Product, ProductFilter, ProductSummary, PagedResult, UpdateProductForm, CreateProductForm } from '../types/api';
 
 export async function getProducts(filter: ProductFilter): Promise<PagedResult<ProductSummary>> {
   const params: Record<string, unknown> = {
@@ -16,6 +16,11 @@ export async function getProducts(filter: ProductFilter): Promise<PagedResult<Pr
 
 export async function getProductById(id: number): Promise<Product> {
   const { data } = await client.get<Product>(`/Products/${id}`);
+  return data;
+}
+
+export async function createProduct(dto: CreateProductForm): Promise<Product> {
+  const { data } = await client.post<Product>('/Products', dto);
   return data;
 }
 

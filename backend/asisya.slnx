@@ -3,4 +3,5 @@
   <Project Path="asisya.Domain/asisya.Domain.csproj" />
   <Project Path="asisya.Infrastructure/asisya.Infrastructure.csproj" />
   <Project Path="asisya/asisya.csproj" />
+  <Project Path="asisya.Tests/asisya.Tests.csproj" />
 </Solution>

@@ -39,6 +39,24 @@ public class ProductService : IProductService
         return product is null ? null : ProductMapper.ToDto(product);
     }
 
+    public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+    {
+        var entity = new Product
+        {
+            ProductName = dto.ProductName,
+            QuantityPerUnit = dto.QuantityPerUnit,
+            UnitPrice = dto.UnitPrice,
+            UnitsInStock = dto.UnitsInStock,
+            UnitsOnOrder = dto.UnitsOnOrder,
+            ReorderLevel = dto.ReorderLevel,
+            Discontinued = dto.Discontinued,
+            CategoryID = dto.CategoryID,
+            SupplierID = dto.SupplierID
+        };
+        var created = await _repository.AddAsync(entity);
+        return ProductMapper.ToDto(created);
+    }
+
     public async Task<int> GenerateAsync(CreateProductsDto dto)
     {
         var random = new Random();
