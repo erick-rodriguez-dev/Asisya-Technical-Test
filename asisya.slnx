@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="asisya.Application/asisya.Application.csproj" />
+  <Project Path="asisya.Domain/asisya.Domain.csproj" />
+  <Project Path="asisya.Infrastructure/asisya.Infrastructure.csproj" />
+  <Project Path="asisya/asisya.csproj" />
+</Solution>
